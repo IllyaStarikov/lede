@@ -13,7 +13,7 @@ const groups = KINDS.map((kind) => ({
 })).filter((g) => g.entries.length > 0);
 
 const fmt = (d: Date) =>
-  d.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
+  d.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric', timeZone: 'UTC' });
 ---
 <Base title={`Archive — ${site.name}`} description="Every edition Lede has published, daily brief to the year in review.">
   <div class="section-head" style="padding-top:2.4rem;">

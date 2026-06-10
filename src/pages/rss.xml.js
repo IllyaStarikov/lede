@@ -31,7 +31,7 @@ export async function GET(context) {
   return rss({
     title: feed.title,
     description: feed.description,
-    site: context.site,
+    site: new URL(import.meta.env.BASE_URL, context.site).href,
     items,
     customData: '<language>en-us</language>',
   });

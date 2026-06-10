@@ -15,7 +15,7 @@ export function GET(context) {
   return rss({
     title: feed.title,
     description: feed.description,
-    site: context.site,
+    site: new URL(import.meta.env.BASE_URL, context.site).href,
     items: list.map((p) => ({
       title: p.title,
       link: pickPrimaryLink(p),

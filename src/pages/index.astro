@@ -22,7 +22,7 @@ const daily = latestDaily && latestDaily.id !== lead?.id ? latestDaily : null;
 const picks = picksJson as unknown as PickData[];
 const top = picks.slice(0, 12);
 const fmt = (d: Date) =>
-  d.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
+  d.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric', timeZone: 'UTC' });
 const sourceCount = stats?.sources?.verified ?? stats?.sources?.total ?? null;
 const countLine = sourceCount
   ? `${picks.length} curated · ${sourceCount.toLocaleString('en-US')} sources read`

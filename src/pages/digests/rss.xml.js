@@ -11,7 +11,7 @@ export async function GET(context) {
   return rss({
     title: feed.title,
     description: feed.description,
-    site: context.site,
+    site: new URL(import.meta.env.BASE_URL, context.site).href,
     items: digests.map((d) => {
       const url = absUrl(`/digests/${d.id}/`, context.site);
       return {
