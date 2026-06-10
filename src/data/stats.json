@@ -1,37 +1,37 @@
 {
-  "generated_at": "2026-06-10T20:48:23.537999+00:00",
+  "generated_at": "2026-06-10T21:58:15.428480+00:00",
   "site_name": "Lede",
   "sources": {
-    "total": 1408,
-    "enabled": 1390,
-    "verified": 1333,
+    "total": 1526,
+    "enabled": 1504,
+    "verified": 1498,
     "by_category": {
-      "expert_blogs": 511,
-      "tech_news": 167,
-      "newsletters": 167,
-      "devtools": 142,
-      "research": 108,
-      "security": 93,
+      "expert_blogs": 543,
+      "tech_news": 184,
+      "newsletters": 170,
+      "devtools": 143,
+      "research": 124,
+      "security": 111,
       "hardware_science": 75,
-      "science": 38,
-      "ai_companies": 38,
-      "physics": 26,
-      "aggregators": 14,
-      "news": 11
+      "science": 50,
+      "ai_companies": 39,
+      "physics": 29,
+      "news": 18,
+      "aggregators": 18
     },
     "by_tier": {
-      "1": 108,
-      "2": 674,
-      "3": 608
+      "1": 109,
+      "2": 717,
+      "3": 678
     }
   },
   "pipeline": {
-    "items_total": 42582,
-    "clusters_total": 40074,
-    "curations_done": 53,
-    "items_7d": 42582,
-    "curated_7d": 53,
-    "avg_relevance_7d": 6.79
+    "items_total": 47159,
+    "clusters_total": 44342,
+    "curations_done": 74,
+    "items_7d": 47159,
+    "curated_7d": 74,
+    "avg_relevance_7d": 6.73
   },
   "digests": {
     "total": 1,
@@ -41,38 +41,38 @@
     "latest": {
       "kind": "weekly",
       "period": "2026-W24",
-      "title": "Signal — Week of June 8, 2026",
+      "title": "Week of June 8, 2026",
       "date": "2026-06-09"
     }
   },
   "channels": [
     {
       "slug": "ai",
-      "picks_current": 39
+      "picks_current": 55
     },
     {
       "slug": "ml-research",
-      "picks_current": 31
+      "picks_current": 37
     },
     {
       "slug": "devtools",
-      "picks_current": 18
+      "picks_current": 23
     },
     {
       "slug": "security",
-      "picks_current": 18
+      "picks_current": 29
     },
     {
       "slug": "hardware",
-      "picks_current": 3
+      "picks_current": 9
     },
     {
       "slug": "startups",
-      "picks_current": 1
+      "picks_current": 4
     },
     {
       "slug": "science",
-      "picks_current": 4
+      "picks_current": 6
     }
   ],
   "top_surfaces_7d": [
@@ -93,16 +93,16 @@
       "clusters": 200
     },
     {
+      "name": "Hacker News",
+      "clusters": 175
+    },
+    {
       "name": "Heise Online (EN)",
       "clusters": 171
     },
     {
       "name": "arXiv cs.CR",
       "clusters": 170
-    },
-    {
-      "name": "Hacker News",
-      "clusters": 169
     },
     {
       "name": "IACR Cryptology ePrint Archive",
@@ -113,8 +113,8 @@
       "clusters": 149
     },
     {
-      "name": "Nature News",
-      "clusters": 119
+      "name": "9to5Mac",
+      "clusters": 127
     }
   ],
   "models": {
