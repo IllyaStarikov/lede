@@ -1,57 +1,125 @@
 {
- "generated_at": "2026-06-10T16:00:00+00:00",
- "site_name": "Lede",
- "sources": {
-  "total": 1116,
-  "enabled": 1092,
-  "verified": 1082,
-  "by_category": {
-   "expert_blogs": 374,
-   "newsletters": 167,
-   "devtools": 124,
-   "tech_news": 114,
-   "research": 116,
-   "security": 77,
-   "hardware_science": 76,
-   "ai_companies": 41,
-   "aggregators": 26,
-   "physics": 11,
-   "science": 0,
-   "news": 0
+  "generated_at": "2026-06-10T20:48:23.537999+00:00",
+  "site_name": "Lede",
+  "sources": {
+    "total": 1408,
+    "enabled": 1390,
+    "verified": 1333,
+    "by_category": {
+      "expert_blogs": 511,
+      "tech_news": 167,
+      "newsletters": 167,
+      "devtools": 142,
+      "research": 108,
+      "security": 93,
+      "hardware_science": 75,
+      "science": 38,
+      "ai_companies": 38,
+      "physics": 26,
+      "aggregators": 14,
+      "news": 11
+    },
+    "by_tier": {
+      "1": 108,
+      "2": 674,
+      "3": 608
+    }
   },
-  "by_tier": {"1": 110, "2": 580, "3": 426}
- },
- "pipeline": {
-  "items_total": 34151,
-  "clusters_total": 32078,
-  "curations_done": 195,
-  "items_7d": 18000,
-  "curated_7d": 195,
-  "avg_relevance_7d": 6.4
- },
- "digests": {
-  "total": 1,
-  "by_kind": {"weekly": 1},
-  "latest": {"kind": "weekly", "period": "2026-W24", "title": "Week of June 8, 2026", "date": "2026-06-09"}
- },
- "channels": [
-  {"slug": "ai", "picks_current": 12},
-  {"slug": "ml-research", "picks_current": 6},
-  {"slug": "devtools", "picks_current": 5},
-  {"slug": "security", "picks_current": 4},
-  {"slug": "hardware", "picks_current": 4},
-  {"slug": "startups", "picks_current": 3},
-  {"slug": "science", "picks_current": 4},
-  {"slug": "news", "picks_current": 0}
- ],
- "top_surfaces_7d": [
-  {"name": "Hacker News", "clusters": 220},
-  {"name": "Lobsters", "clusters": 60},
-  {"name": "arXiv", "clusters": 400}
- ],
- "models": {
-  "triage": "claude-haiku-4-5",
-  "deep": "claude-sonnet-4-6",
-  "digest": "claude-opus-4-8"
- }
+  "pipeline": {
+    "items_total": 42582,
+    "clusters_total": 40074,
+    "curations_done": 53,
+    "items_7d": 42582,
+    "curated_7d": 53,
+    "avg_relevance_7d": 6.79
+  },
+  "digests": {
+    "total": 1,
+    "by_kind": {
+      "weekly": 1
+    },
+    "latest": {
+      "kind": "weekly",
+      "period": "2026-W24",
+      "title": "Signal — Week of June 8, 2026",
+      "date": "2026-06-09"
+    }
+  },
+  "channels": [
+    {
+      "slug": "ai",
+      "picks_current": 39
+    },
+    {
+      "slug": "ml-research",
+      "picks_current": 31
+    },
+    {
+      "slug": "devtools",
+      "picks_current": 18
+    },
+    {
+      "slug": "security",
+      "picks_current": 18
+    },
+    {
+      "slug": "hardware",
+      "picks_current": 3
+    },
+    {
+      "slug": "startups",
+      "picks_current": 1
+    },
+    {
+      "slug": "science",
+      "picks_current": 4
+    }
+  ],
+  "top_surfaces_7d": [
+    {
+      "name": "arXiv cs.LG",
+      "clusters": 200
+    },
+    {
+      "name": "arXiv cs.CV",
+      "clusters": 200
+    },
+    {
+      "name": "arXiv cs.CL",
+      "clusters": 200
+    },
+    {
+      "name": "arXiv cs.AI",
+      "clusters": 200
+    },
+    {
+      "name": "Heise Online (EN)",
+      "clusters": 171
+    },
+    {
+      "name": "arXiv cs.CR",
+      "clusters": 170
+    },
+    {
+      "name": "Hacker News",
+      "clusters": 169
+    },
+    {
+      "name": "IACR Cryptology ePrint Archive",
+      "clusters": 153
+    },
+    {
+      "name": "arXiv stat.ML",
+      "clusters": 149
+    },
+    {
+      "name": "Nature News",
+      "clusters": 119
+    }
+  ],
+  "models": {
+    "triage": "claude-haiku-4-5",
+    "deep": "claude-sonnet-4-6",
+    "digest": "claude-opus-4-8"
+  }
 }
