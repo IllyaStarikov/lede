@@ -19,3 +19,7 @@ npm-debug.log*
 screenshots/
 test-results/
 playwright-report/
+
+# global gitignore ignores lib/ — this repo needs src/lib
+!src/lib/
+!src/lib/**
