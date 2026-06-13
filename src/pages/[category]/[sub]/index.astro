@@ -1,6 +1,7 @@
 ---
 import Base from '../../../layouts/Base.astro';
 import Pick, { type PickData } from '../../../components/Pick.astro';
+import Rail from '../../../components/Rail.astro';
 import picksJson from '../../../data/picks.json';
 import { site, href } from '../../../site';
 import { CATEGORIES, deriveCategory } from '../../../lib/taxonomy';
@@ -19,37 +20,61 @@ const picks = (picksJson as unknown as PickData[]).map((p) => {
   const tax = deriveCategory(p.title, p.channels);
   return { ...p, category: tax.category, subcategories: tax.subcategories } as PickData;
 });
-const list = picks.filter(
-  (p) => p.category === category.slug && (p.subcategories ?? []).includes(sub.slug)
-);
+const catList = picks.filter((p) => p.category === category.slug);
+const list = catList.filter((p) => (p.subcategories ?? []).includes(sub.slug));
 const lead = list[0] ?? null;
 const briefRows = list.slice(1, 7);
 const alsoRows = list.slice(7);
----
-<Base title={`${sub.name} — ${category.name} — ${site.name}`} description={sub.blurb}>
-  <p class="crumb" style="padding-top:2rem;"><a href={href(`/${category.slug}/`)}>← {category.name}</a></p>
-  <div class="section-head" style="margin-top:0.4rem;">
-    <h1>{sub.name}</h1>
-    <span class="count">{list.length} {list.length === 1 ? 'pick' : 'picks'}</span>
-  </div>
-  <p class="cat-blurb">{sub.blurb}</p>
-  <p style="margin-top:1.1rem;">
-    <a class="feed-chip" href={href(`/${category.slug}/rss.xml`)}><span class="dot"></span>Subscribe to {category.name}</a>
-  </p>
 
-  {list.length > 0 ? (
-    <Fragment>
-      <div class="briefing" style="margin-top:1.4rem; border-top:1px solid var(--hairline-bold);">
-        {lead && <Pick pick={lead} index={0} variant="lead" />}
-        {briefRows.map((p, i) => <Pick pick={p} index={i + 1} variant="brief" />)}
+// sibling subcategories (within this category) that carry picks, for the rail
+const siblingSubs = category.subcategories
+  .map((s) => ({
+    label: s.name,
+    href: href(`/${category.slug}/${s.slug}/`),
+    current: s.slug === sub.slug,
+    meta: catList.filter((p) => (p.subcategories ?? []).includes(s.slug)).length || null,
+  }))
+  .filter((x) => x.meta);
+---
+<Base wide={true} title={`${sub.name} — ${category.name} — ${site.name}`} description={sub.blurb}>
+  <div class="broadsheet">
+    <div class="broadsheet__main">
+      <p class="crumb"><a href={href(`/${category.slug}/`)}>← {category.name}</a></p>
+      <div class="section-head" style="margin-top:0.4rem;">
+        <h1>{sub.name}</h1>
+        <span class="count">{list.length} {list.length === 1 ? 'pick' : 'picks'}</span>
       </div>
-      {alsoRows.length > 0 && (
-        <div class="also" style="margin-top:1.2rem;">
-          {alsoRows.map((p, i) => <Pick pick={p} index={i} variant="also" />)}
-        </div>
+      <p class="cat-blurb">{sub.blurb}</p>
+
+      {list.length > 0 ? (
+        <Fragment>
+          <div class="briefing" style="margin-top:1.4rem; border-top:1px solid var(--hairline-bold);">
+            {lead && <Pick pick={lead} index={0} variant="lead" />}
+            {briefRows.map((p, i) => <Pick pick={p} index={i + 1} variant="brief" />)}
+          </div>
+          {alsoRows.length > 0 && (
+            <div class="also" style="margin-top:1.2rem;">
+              {alsoRows.map((p, i) => <Pick pick={p} index={i} variant="also" />)}
+            </div>
+          )}
+        </Fragment>
+      ) : (
+        <p class="empty-state">Nothing under {sub.name} in {category.name} right now.</p>
       )}
-    </Fragment>
-  ) : (
-    <p class="empty-state">Nothing under {sub.name} in {category.name} right now.</p>
-  )}
+    </div>
+
+    <Rail
+      index={{ title: `More in ${category.name}`, items: siblingSubs }}
+      feeds={{
+        title: 'Subscribe',
+        items: [
+          { label: `${category.name} feed`, href: href(`/${category.slug}/rss.xml`) },
+          { label: 'Everything', href: href('/rss.xml') },
+        ],
+        moreLabel: 'All feeds',
+        moreHref: href('/feeds/'),
+      }}
+      back={{ label: `All of ${category.name}`, href: href(`/${category.slug}/`) }}
+    />
+  </div>
 </Base>

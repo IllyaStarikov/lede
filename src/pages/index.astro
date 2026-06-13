@@ -2,8 +2,8 @@
 import { getCollection } from 'astro:content';
 import Base from '../layouts/Base.astro';
 import Pick, { type PickData } from '../components/Pick.astro';
+import Rail from '../components/Rail.astro';
 import picksJson from '../data/picks.json';
-import stats from '../data/stats.json';
 import { site, href, KIND_LABEL, KINDS } from '../site';
 import { CATEGORIES, deriveCategory } from '../lib/taxonomy';
 
@@ -11,10 +11,12 @@ const digests = (await getCollection('digests')).sort(
   (a, b) => b.data.date.valueOf() - a.data.date.valueOf()
 );
 const latestDaily = digests.find((d) => d.data.kind === 'daily') ?? null;
-// latest edition of each kind, for the "Editions" index near the foot
+// latest edition of each kind, for the rail's "Editions" index
 const editions = KINDS.map((k) => digests.find((d) => d.data.kind === k)).filter(
   (d): d is (typeof digests)[number] => Boolean(d)
 );
+// the daily is surfaced as "the brief"; the rail's editions list is the longer view
+const olderEditions = editions.filter((d) => d.id !== latestDaily?.id);
 
 // The pipeline emits the v1 contract (channels[]); derive the public taxonomy
 // here so the front page reads as a sectioned edition. When the pipeline emits
@@ -36,100 +38,84 @@ const sections = CATEGORIES.map((cat) => ({
   .filter((s) => s.items.length > 0)
   .sort((a, b) => b.items.length - a.items.length);
 
-const sourceCount = stats?.sources?.verified ?? stats?.sources?.total ?? null;
-const leadLabel = `${picks.length} curated${sourceCount ? ` from ${sourceCount.toLocaleString('en-US')} sources` : ''}`;
 const fmt = (d: Date) =>
-  d.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric', timeZone: 'UTC' });
+  d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', timeZone: 'UTC' });
 ---
-<Base>
+<Base wide={true}>
   <h1 class="sr-only">{site.name} — today's edition</h1>
-  <p class="standfirst reveal">
-    {site.name} watches where technology, AI, and the sciences break first, and
-    keeps almost none of it. Stories that surface across many independent sources
-    are read closely, scored, and explained. Every pick links the primary
-    source, with a free read when the original is walled.
-    <a href={href('/about/')}>How it works →</a>
-    {sourceCount && (
-      <span class="figures">
-        {sourceCount.toLocaleString('en-US')} sources read; a brief each weekday,
-        digests weekly to yearly
-      </span>
-    )}
-  </p>
+  <div class="broadsheet">
+    <div class="broadsheet__main">
+      <p class="standfirst reveal">
+        {site.name} watches where technology, AI, and the sciences break first,
+        and keeps almost none of it. Stories that surface across many independent
+        sources are read closely, scored, and explained — each pick links the
+        primary source, with a free read when the original is walled.
+        <a href={href('/about/')}>How it works →</a>
+      </p>
 
-  {lead && (
-    <section class="reveal" aria-label="Lead story" data-category={lead.category}>
-      <div class="rail">
-        <span class="rail__label">Today's lead</span>
-        <span class="rail__rule"></span>
-        <span class="rail__count">{leadLabel}</span>
-      </div>
-      <div class="briefing">
-        <Pick pick={lead} index={0} variant="lead" />
-      </div>
-    </section>
-  )}
+      {lead && (
+        <section class="reveal" aria-label="Lead story" data-category={lead.category}>
+          <div class="rail">
+            <span class="rail__label">Today's lead</span>
+            <span class="rail__rule"></span>
+          </div>
+          <div class="briefing">
+            <Pick pick={lead} index={0} variant="lead" />
+          </div>
+        </section>
+      )}
 
-  {latestDaily && (
-    <aside class="brief-strip reveal" aria-label="Today's brief" data-category="brief">
-      <span class="brief-strip__kind">{KIND_LABEL[latestDaily.data.kind]}</span>
-      <a class="brief-strip__title" href={href(`/digests/${latestDaily.id}/`)}>{latestDaily.data.title}</a>
-      <p class="brief-strip__blurb">{latestDaily.data.blurb}</p>
-      <a class="cta" href={href(`/digests/${latestDaily.id}/`)}>Read the brief <span aria-hidden="true">→</span></a>
-    </aside>
-  )}
-
-  {sections.map((s) => (
-    <section class="reveal" data-category={s.cat.slug} aria-label={s.cat.name}>
-      <div class="rail">
-        <span class="rail__label">{s.cat.name}</span>
-        <span class="rail__rule"></span>
-        <a class="rail__more" href={href(`/${s.cat.slug}/`)}>
-          {s.items.length} {s.items.length === 1 ? 'story' : 'stories'} <span aria-hidden="true">→</span>
-        </a>
-      </div>
-      <div class="briefing">
-        {s.items.slice(0, PER_SECTION).map((p, i) => <Pick pick={p} index={i} variant="brief" />)}
-      </div>
-    </section>
-  ))}
-
-  {editions.length > 0 && (
-    <section class="reveal" aria-label="Editions">
-      <div class="rail">
-        <span class="rail__label">Editions</span>
-        <span class="rail__rule"></span>
-        <a class="rail__more" href={href('/archive/')}>All editions <span aria-hidden="true">→</span></a>
-      </div>
-      <ul class="editions">
-        {editions.map((d) => (
-          <li class="editions__row">
-            <span class="editions__kind">{KIND_LABEL[d.data.kind]}</span>
-            <a class="editions__title" href={href(`/digests/${d.id}/`)}>{d.data.title}</a>
-            <span class="editions__date">{fmt(d.data.date)}</span>
-          </li>
-        ))}
-      </ul>
-    </section>
-  )}
-
-  <section class="subscribe reveal">
-    <span class="label" style="color:var(--accent-ink);">Subscribe</span>
-    <h2>Read it in your feed reader.</h2>
-    <p>
-      No inbox, no algorithm. Point any RSS reader at a feed and the best of it
-      arrives as it's curated — take everything, only the digests, or a single
-      section.
-    </p>
-    <div class="feeds">
-      <a class="feed-chip" href={href('/rss.xml')}><span class="dot"></span>Everything</a>
-      <a class="feed-chip" href={href('/digests/rss.xml')}><span class="dot"></span>Digests</a>
-      {CATEGORIES.map((c) => (
-        <a class="feed-chip" href={href(`/${c.slug}/rss.xml`)} data-category={c.slug}><span class="dot"></span>{c.name}</a>
+      {sections.map((s) => (
+        <section class="reveal" id={`s-${s.cat.slug}`} data-category={s.cat.slug} aria-label={s.cat.name}>
+          <div class="rail">
+            <span class="rail__label">{s.cat.name}</span>
+            <span class="rail__rule"></span>
+            <a class="rail__more" href={href(`/${s.cat.slug}/`)}>
+              {s.items.length} {s.items.length === 1 ? 'story' : 'stories'} <span aria-hidden="true">→</span>
+            </a>
+          </div>
+          <div class="briefing">
+            {s.items.slice(0, PER_SECTION).map((p, i) => <Pick pick={p} index={i} variant="brief" />)}
+          </div>
+        </section>
       ))}
     </div>
-    <p style="margin-top:1.2rem;">
-      <a class="cta" href={href('/feeds/')}>All feeds <span aria-hidden="true">→</span></a>
-    </p>
-  </section>
+
+    <Rail
+      index={{
+        title: 'In this edition',
+        items: sections.map((s) => ({
+          label: s.cat.name,
+          href: `#s-${s.cat.slug}`,
+          meta: s.items.length,
+          category: s.cat.slug,
+        })),
+      }}
+      brief={latestDaily ? {
+        kind: KIND_LABEL[latestDaily.data.kind],
+        title: latestDaily.data.title,
+        href: href(`/digests/${latestDaily.id}/`),
+      } : null}
+      editions={olderEditions.length ? {
+        title: 'Editions',
+        items: olderEditions.map((d) => ({
+          label: KIND_LABEL[d.data.kind],
+          href: href(`/digests/${d.id}/`),
+          meta: fmt(d.data.date),
+        })),
+        moreLabel: 'All editions',
+        moreHref: href('/archive/'),
+      } : null}
+      feeds={{
+        title: 'Subscribe',
+        items: [
+          { label: 'Everything', href: href('/rss.xml') },
+          { label: 'Digests', href: href('/digests/rss.xml') },
+          ...CATEGORIES.map((c) => ({ label: c.name, href: href(`/${c.slug}/rss.xml`) })),
+        ],
+        moreLabel: 'All feeds',
+        moreHref: href('/feeds/'),
+      }}
+    />
+  </div>
 </Base>

@@ -1,6 +1,7 @@
 ---
 import Base from '../../layouts/Base.astro';
 import Pick, { type PickData } from '../../components/Pick.astro';
+import Rail from '../../components/Rail.astro';
 import picksJson from '../../data/picks.json';
 import { site, href } from '../../site';
 import { CATEGORIES, deriveCategory } from '../../lib/taxonomy';
@@ -24,46 +25,70 @@ const alsoRows = list.slice(7);
 const subCounts = category.subcategories
   .map((s) => ({ sub: s, n: list.filter((p) => (p.subcategories ?? []).includes(s.slug)).length }))
   .filter((x) => x.n > 0);
+
+// sibling-section nav for the rail, with live counts
+const sectionNav = CATEGORIES.map((c) => ({
+  label: c.name,
+  href: href(`/${c.slug}/`),
+  category: c.slug,
+  current: c.slug === category.slug,
+  meta: picks.filter((p) => p.category === c.slug).length || null,
+}));
 ---
-<Base title={`${category.name} — ${site.name}`} description={category.blurb}>
-  <div class="section-head" style="padding-top:2.4rem;">
-    <h1>{category.name}</h1>
-    <span class="count">{list.length} {list.length === 1 ? 'pick' : 'picks'}</span>
-  </div>
-  <p class="cat-blurb">{category.blurb}</p>
-
-  {subCounts.length > 0 && (
-    <nav class="subchips" aria-label={`${category.name} subcategories`}>
-      {subCounts.map(({ sub, n }) => (
-        <a class="subchip" href={href(`/${category.slug}/${sub.slug}/`)}>{sub.name}<span class="subchip__n">{n}</span></a>
-      ))}
-    </nav>
-  )}
-
-  <p style="margin-top:1.1rem;">
-    <a class="feed-chip" href={href(`/${category.slug}/rss.xml`)}><span class="dot"></span>Subscribe to {category.name}</a>
-  </p>
-
-  {list.length > 0 ? (
-    <Fragment>
-      <div class="briefing" style="margin-top:1.4rem; border-top:1px solid var(--hairline-bold);">
-        {lead && <Pick pick={lead} index={0} variant="lead" />}
-        {briefRows.map((p, i) => <Pick pick={p} index={i + 1} variant="brief" />)}
+<Base wide={true} title={`${category.name} — ${site.name}`} description={category.blurb}>
+  <div class="broadsheet">
+    <div class="broadsheet__main">
+      <div class="section-head">
+        <h1>{category.name}</h1>
+        <span class="count">{list.length} {list.length === 1 ? 'pick' : 'picks'}</span>
       </div>
-      {alsoRows.length > 0 && (
-        <Fragment>
-          <div class="rail">
-            <span class="rail__label">More in {category.name}</span>
-            <span class="rail__rule"></span>
-            <span class="rail__count">{alsoRows.length}</span>
-          </div>
-          <div class="also">
-            {alsoRows.map((p, i) => <Pick pick={p} index={i} variant="also" />)}
-          </div>
-        </Fragment>
+      <p class="cat-blurb">{category.blurb}</p>
+
+      {subCounts.length > 0 && (
+        <nav class="subchips" aria-label={`${category.name} subcategories`}>
+          {subCounts.map(({ sub, n }) => (
+            <a class="subchip" href={href(`/${category.slug}/${sub.slug}/`)}>{sub.name}<span class="subchip__n">{n}</span></a>
+          ))}
+        </nav>
       )}
-    </Fragment>
-  ) : (
-    <p class="empty-state">Nothing curated in {category.name} right now. The wire refills through the day.</p>
-  )}
+
+      {list.length > 0 ? (
+        <Fragment>
+          <div class="briefing" style="margin-top:1.4rem; border-top:1px solid var(--hairline-bold);">
+            {lead && <Pick pick={lead} index={0} variant="lead" />}
+            {briefRows.map((p, i) => <Pick pick={p} index={i + 1} variant="brief" />)}
+          </div>
+          {alsoRows.length > 0 && (
+            <Fragment>
+              <div class="rail">
+                <span class="rail__label">More in {category.name}</span>
+                <span class="rail__rule"></span>
+                <span class="rail__count">{alsoRows.length}</span>
+              </div>
+              <div class="also">
+                {alsoRows.map((p, i) => <Pick pick={p} index={i} variant="also" />)}
+              </div>
+            </Fragment>
+          )}
+        </Fragment>
+      ) : (
+        <p class="empty-state">Nothing curated in {category.name} right now. The wire refills through the day.</p>
+      )}
+    </div>
+
+    <Rail
+      nav={{ title: 'Sections', items: sectionNav }}
+      feeds={{
+        title: 'Subscribe',
+        items: [
+          { label: `${category.name} feed`, href: href(`/${category.slug}/rss.xml`) },
+          { label: 'Everything', href: href('/rss.xml') },
+          { label: 'Digests', href: href('/digests/rss.xml') },
+        ],
+        moreLabel: 'All feeds',
+        moreHref: href('/feeds/'),
+      }}
+      back={{ label: 'Front page', href: href('/') }}
+    />
+  </div>
 </Base>

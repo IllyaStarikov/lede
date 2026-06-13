@@ -16,12 +16,15 @@ interface Props {
   compactHeader?: boolean;
   /** wire edition stamp shown in the compact header (e.g. "Weekly · 2026-W24") */
   edition?: string;
+  /** widen the shell to the broadsheet width (front + category pages) */
+  wide?: boolean;
 }
 const {
   title = `${site.name} — the best of technology, AI & science`,
   description = site.description,
   compactHeader = false,
   edition,
+  wide = false,
 } = Astro.props;
 const year = new Date().getFullYear();
 
@@ -31,8 +34,6 @@ const asOf = generatedAt ? new Date(generatedAt) : new Date();
 const wireDate = asOf.toLocaleDateString('en-US', {
   weekday: 'long', month: 'long', day: 'numeric', year: 'numeric', timeZone: 'UTC',
 });
-const verified = (rawStats as { sources?: { verified?: number } }).sources?.verified ?? null;
-const sourceLine = verified ? `${verified.toLocaleString('en-US')} sources` : 'automated wire';
 const asOfStamp = asOf.toISOString().slice(0, 16).replace('T', ' ');
 // Astro.url.pathname already includes the base path.
 const origin = Astro.site ? String(Astro.site).replace(/\/+$/, '') : '';
@@ -81,7 +82,7 @@ const isCurrent = (path: string) => (currentPath === href(path) || currentPath =
       })();
     </script>
   </head>
-  <body>
+  <body class={wide ? 'page-wide' : undefined}>
     <a class="skip" href="#main">Skip to content</a>
     {compactHeader ? (
       <header class="wrap compact-head">
@@ -103,7 +104,7 @@ const isCurrent = (path: string) => (currentPath === href(path) || currentPath =
         <div class="wrap">
           <div class="dateline">
             <span class="dateline__date">{wireDate}</span>
-            <span class="dateline__edition"><span>Automated edition</span><span class="dateline__count">{sourceLine} read</span></span>
+            <span class="dateline__edition">Automated edition</span>
           </div>
         </div>
         <div class="wrap">
@@ -134,7 +135,7 @@ const isCurrent = (path: string) => (currentPath === href(path) || currentPath =
           distilled daily to yearly. Curated by machine, edited by rubric,
           published automatically.
         </p>
-        <span class="foot__colophon"><span>Automated edition</span><span>{sourceLine}</span><span>{asOfStamp} UTC</span></span>
+        <span class="foot__colophon"><span>Automated edition</span><span>{asOfStamp} UTC</span></span>
       </div>
       <div class="foot__links">
         <a href={href('/rss.xml')}>RSS</a>

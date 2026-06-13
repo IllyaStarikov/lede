@@ -1,0 +1,119 @@
+---
+/**
+ * The edition rail — the right-hand column of the broadsheet layout.
+ * Carries the edition furniture (section index, the brief, editions, subscribe)
+ * so the main column stays a clean reading sequence. Every block is optional;
+ * pass only what a page needs. Index/nav items take a `category` so muted
+ * categories hide from the rail exactly as they do from the sections.
+ */
+export interface RailLink {
+  label: string;
+  href: string;
+  meta?: string | number | null;
+  category?: string | null;
+  current?: boolean;
+}
+export interface RailBlock {
+  title: string;
+  items: RailLink[];
+  moreLabel?: string;
+  moreHref?: string;
+}
+interface Props {
+  index?: RailBlock | null;
+  nav?: RailBlock | null;
+  brief?: { kind: string; title: string; href: string } | null;
+  editions?: RailBlock | null;
+  feeds?: RailBlock | null;
+  back?: RailLink | null;
+}
+const {
+  index = null,
+  nav = null,
+  brief = null,
+  editions = null,
+  feeds = null,
+  back = null,
+} = Astro.props;
+const hasMeta = (m: RailLink['meta']) => m != null && m !== '';
+---
+<aside class="erail" aria-label="Edition guide">
+  {index && index.items.length > 0 && (
+    <nav class="erail__block erail__index" aria-label={index.title}>
+      <span class="erail__head">{index.title}</span>
+      <ul class="erail__list">
+        {index.items.map((it) => (
+          <li data-category={it.category ?? undefined}>
+            <a href={it.href} aria-current={it.current ? 'page' : undefined}>
+              <span class="erail__name">{it.label}</span>
+              {hasMeta(it.meta) && <span class="erail__n">{it.meta}</span>}
+            </a>
+          </li>
+        ))}
+      </ul>
+    </nav>
+  )}
+
+  {nav && nav.items.length > 0 && (
+    <nav class="erail__block erail__nav" aria-label={nav.title}>
+      <span class="erail__head">{nav.title}</span>
+      <ul class="erail__list">
+        {nav.items.map((it) => (
+          <li data-category={it.category ?? undefined}>
+            <a href={it.href} aria-current={it.current ? 'page' : undefined}>
+              <span class="erail__name">{it.label}</span>
+              {hasMeta(it.meta) && <span class="erail__n">{it.meta}</span>}
+            </a>
+          </li>
+        ))}
+      </ul>
+    </nav>
+  )}
+
+  {brief && (
+    <div class="erail__block erail__brief">
+      <span class="erail__head">The brief</span>
+      <span class="erail__kind">{brief.kind}</span>
+      <a class="erail__brieflink" href={brief.href}>{brief.title}</a>
+    </div>
+  )}
+
+  {editions && editions.items.length > 0 && (
+    <div class="erail__block erail__editions">
+      <span class="erail__head">{editions.title}</span>
+      <ul class="erail__list">
+        {editions.items.map((it) => (
+          <li>
+            <a href={it.href}>
+              <span class="erail__name">{it.label}</span>
+              {hasMeta(it.meta) && <span class="erail__n">{it.meta}</span>}
+            </a>
+          </li>
+        ))}
+      </ul>
+      {editions.moreHref && (
+        <a class="erail__more" href={editions.moreHref}>{editions.moreLabel ?? 'More'} <span aria-hidden="true">→</span></a>
+      )}
+    </div>
+  )}
+
+  {feeds && feeds.items.length > 0 && (
+    <div class="erail__block erail__sub">
+      <span class="erail__head">{feeds.title}</span>
+      <ul class="erail__feeds">
+        {feeds.items.map((it) => (
+          <li>
+            <a href={it.href}><span class="dot" aria-hidden="true"></span>{it.label}</a>
+          </li>
+        ))}
+      </ul>
+      {feeds.moreHref && (
+        <a class="erail__more" href={feeds.moreHref}>{feeds.moreLabel ?? 'All feeds'} <span aria-hidden="true">→</span></a>
+      )}
+    </div>
+  )}
+
+  {back && (
+    <a class="erail__back" href={back.href}><span aria-hidden="true">←</span> {back.label}</a>
+  )}
+</aside>

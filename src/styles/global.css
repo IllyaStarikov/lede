@@ -58,6 +58,7 @@
   --leading-tight: 1.34;   /* display blurbs / standfirsts */
   --wide:    58rem;
   --maxw:    66rem;
+  --maxw-wide: 78rem;   /* broadsheet pages: main column + edition rail */
   --gutter:  clamp(1.25rem, 4vw, 3.5rem);
 
   /* 4px spacing scale */
@@ -154,6 +155,105 @@ a { color: inherit; text-decoration: none; }
   position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
   overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0;
 }
+
+/* ── broadsheet: a reading column beside a sticky edition rail ──────────── */
+/* Front, category and subcategory pages widen the shell (.page-wide) and split
+   into a main column — where body text keeps its measure — and a rail carrying
+   the edition furniture. Below 60rem the rail drops beneath the main column. */
+.page-wide { --maxw: var(--maxw-wide); }
+.broadsheet {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(15rem, 17.5rem);
+  gap: var(--space-6) clamp(1.5rem, 3vw, 2.5rem);
+  align-items: start;
+  margin-top: var(--space-5);
+}
+/* the rule runs the full height of the (taller) main column, so the rail reads
+   as a margin, not as missing content */
+.broadsheet__main {
+  min-width: 0;
+  border-right: 1px solid var(--hairline);
+  padding-right: clamp(1.25rem, 2.5vw, 2.25rem);
+}
+/* main + rail share a top edge — drop the leading element's own top margin */
+.broadsheet__main > :first-child { margin-top: 0; }
+@media (max-width: 60rem) {
+  .broadsheet { grid-template-columns: 1fr; gap: 0; }
+  .broadsheet__main { border-right: 0; padding-right: 0; }
+}
+
+.erail {
+  position: sticky; top: var(--space-4);
+  display: flex; flex-direction: column; gap: var(--space-6);
+  font-variant-numeric: tabular-nums;
+}
+@media (max-width: 60rem) {
+  .erail {
+    position: static; margin-top: var(--space-7);
+    padding-top: var(--space-5); border-top: 2px solid var(--ink);
+  }
+  /* the section index + sibling nav duplicate the column you just scrolled and
+     the masthead nav; the brief, editions and subscribe still earn the foot */
+  .erail__index, .erail__nav { display: none; }
+}
+.erail__head {
+  display: block; font-family: var(--mono); font-weight: 600;
+  font-size: var(--mono-sm); letter-spacing: var(--track-cap);
+  text-transform: uppercase; color: var(--ink);
+  padding-bottom: var(--space-2); margin-bottom: var(--space-2);
+  border-bottom: 1px solid var(--hairline-bold);
+}
+.erail__head::before {
+  content: ""; display: inline-block; width: 0.45em; height: 0.45em;
+  background: var(--accent); margin-right: 0.55em;
+}
+.erail__list { list-style: none; margin: 0; padding: 0; }
+.erail__list a {
+  display: flex; align-items: baseline; justify-content: space-between; gap: 0.8rem;
+  padding: 0.34rem 0; font-family: var(--sans); font-weight: 500; font-size: 1rem;
+  color: var(--ink-soft); transition: color 0.16s ease;
+}
+.erail__list a:hover { color: var(--accent); }
+.erail__list a[aria-current="page"] { color: var(--ink); font-weight: 600; }
+.erail__name { text-wrap: balance; }
+.erail__n {
+  flex: none; font-family: var(--mono); font-size: var(--mono-xs);
+  letter-spacing: var(--track-meta); color: var(--ink-faint);
+}
+/* the brief block — today's daily, given a clear pull */
+.erail__kind {
+  display: block; font-family: var(--mono); font-size: var(--mono-xs);
+  letter-spacing: var(--track-cap); text-transform: uppercase;
+  color: var(--accent-ink); margin: 0.1rem 0 0.25rem;
+}
+.erail__brieflink {
+  display: block; font-family: var(--sans); font-weight: 700; font-size: 1.1rem;
+  line-height: 1.18; letter-spacing: -0.012em; color: var(--ink); text-wrap: balance;
+}
+.erail__brieflink:hover { color: var(--accent-ink); }
+/* the subscribe block — quiet text links, not bordered chips */
+.erail__feeds { list-style: none; margin: 0; padding: 0; }
+.erail__feeds a {
+  display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.28rem 0;
+  font-family: var(--mono); font-size: var(--mono-sm); letter-spacing: var(--track-meta);
+  color: var(--ink-soft); transition: color 0.16s ease;
+}
+.erail__feeds a:hover { color: var(--accent); }
+.erail__feeds .dot { width: 0.36rem; height: 0.36rem; background: var(--accent); flex: none; }
+.erail__more {
+  display: inline-flex; gap: 0.4rem; margin-top: var(--space-3);
+  font-family: var(--mono); font-size: var(--mono-sm); letter-spacing: var(--track-cap);
+  text-transform: uppercase; color: var(--ink-faint);
+  transition: gap 0.2s ease, color 0.18s ease;
+}
+.erail__more:hover { color: var(--accent); gap: 0.7rem; }
+.erail__back {
+  display: inline-flex; gap: 0.4rem;
+  font-family: var(--mono); font-size: var(--mono-sm); letter-spacing: var(--track-cap);
+  text-transform: uppercase; color: var(--ink-soft);
+  transition: gap 0.2s ease, color 0.18s ease;
+}
+.erail__back:hover { color: var(--accent); gap: 0.7rem; }
 
 
 /* ── label / mono kicker ───────────────────────────────────────────────── */
