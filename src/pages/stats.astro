@@ -59,9 +59,9 @@ const generated = stats.generated_at.slice(0, 19).replace('T', ' ') + ' UTC';
           </tbody>
         </table>
 
-        <h3 class="label" style="margin-top:2rem;">Picks by channel</h3>
+        <h3 class="label" style="margin-top:2rem;">Picks by pipeline channel</h3>
         <table class="bare">
-          <thead><tr><th>Channel</th><th class="num">Current picks</th></tr></thead>
+          <thead><tr><th>Pipeline channel</th><th class="num">Current picks</th></tr></thead>
           <tbody>
             {stats.channels.map((c) => (
               <tr><td>{channelName(c.slug)}</td><td class="num">{n(c.picks_current)}</td></tr>
