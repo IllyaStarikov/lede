@@ -155,6 +155,12 @@ a { color: inherit; text-decoration: none; }
   overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0;
 }
 
+/* inline divider — a sharp 1px hairline, never a middot/bullet glyph */
+.sep {
+  display: inline-block; width: 1px; height: 0.82em; margin: 0 0.6em;
+  background: var(--hairline-bold); vertical-align: -0.04em;
+}
+
 /* ── label / mono kicker ───────────────────────────────────────────────── */
 .label {
   font-family: var(--mono); font-size: var(--mono-label); font-weight: 500;
@@ -247,17 +253,17 @@ a { color: inherit; text-decoration: none; }
 /* ── section rail (THE BRIEF / THE PICKS / ALSO NOTABLE) ────────────────── */
 .rail {
   display: flex; align-items: center; gap: 0.9rem;
-  margin: var(--space-7) 0 var(--space-5);
+  margin: calc(var(--space-7) + var(--space-3)) 0 var(--space-5);
 }
 .rail__label {
   display: inline-flex; align-items: center;
-  font-family: var(--mono); font-weight: 500; font-size: var(--mono-sm);
-  letter-spacing: var(--track-cap); text-transform: uppercase; color: var(--ink-soft);
+  font-family: var(--mono); font-weight: 600; font-size: var(--mono-lg);
+  letter-spacing: var(--track-cap); text-transform: uppercase; color: var(--ink);
   white-space: nowrap;
 }
 .rail__label::before {     /* the nameplate square, recurring on every section */
-  content: ""; display: inline-block; width: 0.42em; height: 0.42em;
-  background: var(--accent); margin-right: 0.6em; flex: none;
+  content: ""; display: inline-block; width: 0.5em; height: 0.5em;
+  background: var(--accent); margin-right: 0.65em; flex: none;
 }
 .rail__rule { flex: 1; height: 0; border-top: 1px solid var(--hairline-bold); }
 .rail__count {
@@ -539,8 +545,8 @@ html:not([data-showsignals="1"]) .pick__signals { display: none; }
 .pick--lead { padding: var(--space-3) 0 var(--space-6); border-bottom: 2px solid var(--ink); }
 .pick--lead .pick__no { font-size: 0.84rem; color: var(--accent-ink); font-weight: 500; }
 .pick--lead .pick__title {
-  font-size: var(--display); line-height: 1.04; letter-spacing: -0.022em;
-  font-weight: 800; margin-bottom: 0.7rem; max-width: 20ch;
+  font-size: var(--display); line-height: 1.06; letter-spacing: -0.02em;
+  font-weight: 800; margin-bottom: 0.7rem; max-width: 22ch;
 }
 /* leads keep the hover sweep instead of a resting underline */
 .pick--lead .pick__title a {
@@ -701,7 +707,10 @@ html:not([data-showsignals="1"]) .pick__signals { display: none; }
 .seg label:first-of-type { border-left-width: 1px; }
 .seg label:hover { color: var(--ink); }
 .seg input { position: absolute; opacity: 0; pointer-events: none; }
-.seg input:checked + label { background: var(--ink); color: var(--ground); border-color: var(--ink); }
+.seg input:checked + label {
+  background: var(--ink); color: var(--ground); border-color: var(--ink);
+  box-shadow: inset 0 -3px 0 var(--accent);   /* spend the accent on the active control */
+}
 .seg input:checked + label:hover { color: var(--ground); }
 .seg input:focus-visible + label { outline: 2px solid var(--accent); outline-offset: 2px; position: relative; z-index: 1; }
 
@@ -776,7 +785,7 @@ html:not([data-showsignals="1"]) .pick__signals { display: none; }
   gap: 1px; background: var(--hairline); border: 1px solid var(--hairline);
   margin: var(--space-5) 0;
 }
-.stat { background: var(--ground); padding: 1.1rem 1.2rem; }
+.stat { background: var(--ground-2); padding: 1.1rem 1.2rem; }
 .stat b {
   display: block; font-family: var(--sans); font-weight: 700;
   font-size: 2rem; letter-spacing: -0.02em; font-variant-numeric: tabular-nums;
@@ -787,19 +796,31 @@ table.bare th { font-family: var(--mono); font-size: var(--mono-xs); letter-spac
 table.bare td { padding: 0.45rem 0.8rem 0.45rem 0; border-bottom: 1px solid var(--hairline); font-variant-numeric: tabular-nums; }
 
 /* ── bar charts (coverage / transparency) — pure CSS, sharp corners ─────── */
+/* Bars are a neutral data fill; orange is reserved for the leading bar of each
+   chart (accent discipline — a spice, not a sauce). */
 .bars { list-style: none; margin: var(--space-4) 0 0; padding: 0; display: grid; gap: 0.5rem; }
-.bar { display: grid; grid-template-columns: 8.5rem 1fr 3.5rem; gap: 0 0.9rem; align-items: center; }
+.bar { display: grid; grid-template-columns: minmax(8rem, max-content) 1fr 3.2rem; gap: 0 0.9rem; align-items: center; }
 .bar__label {
   font-family: var(--mono); font-size: var(--mono-xs); letter-spacing: var(--track-meta);
-  text-transform: uppercase; color: var(--ink-soft); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  text-transform: uppercase; color: var(--ink-soft); white-space: nowrap;
 }
 .bar__track { height: 0.7rem; background: var(--ground-2); border: 1px solid var(--hairline); position: relative; }
-.bar__fill { position: absolute; inset: 0 auto 0 0; min-width: 2px; background: var(--accent); }
+.bar__fill { position: absolute; inset: 0 auto 0 0; min-width: 2px; background: var(--ink-faint); }
+.bar--lead .bar__fill { background: var(--accent); }
 .bar__val {
   font-family: var(--mono); font-size: var(--mono-xs); color: var(--ink-faint);
   text-align: right; font-variant-numeric: tabular-nums;
 }
-@media (max-width: 34rem) { .bar { grid-template-columns: 7rem 1fr 3rem; } }
+@media (max-width: 40rem) {
+  .bar {
+    grid-template-columns: 1fr auto;
+    grid-template-areas: "label label" "track val";
+    row-gap: 0.25rem;
+  }
+  .bar__label { grid-area: label; white-space: normal; }
+  .bar__track { grid-area: track; }
+  .bar__val { grid-area: val; }
+}
 
 /* ── footer ────────────────────────────────────────────────────────────── */
 .foot {
@@ -850,10 +871,16 @@ table.bare td { padding: 0.45rem 0.8rem 0.45rem 0; border-bottom: 1px solid var(
 
 /* ── responsive ────────────────────────────────────────────────────────── */
 @media (max-width: 40rem) {
-  .channels { gap: 0.1rem 1rem; }
+  .channels { gap: 0.35rem 1.15rem; padding: 0.8rem 0; }
+  .channels a { padding: 0.45rem 0; }       /* ~44px tap target */
+  .toggle { padding-top: 0.45rem; padding-bottom: 0.45rem; }
   .masthead__kicker { text-align: left; }
   .compact-head__tag { display: none; }
   .foot { flex-direction: column; }
+  /* roomier controls on the touch-first preferences page */
+  .seg label { padding: 0.7rem 0.95rem; }
+  .prefs .danger { padding: 0.7rem 1rem; }
+  .pref-toggle { min-height: 44px; align-items: center; }
   /* keep the byline to one line so the headline is read first */
   .briefing .pick:not(.pick--lead) .pick__date,
   .briefing .pick:not(.pick--lead) .pick__meta a.pick__tag ~ a.pick__tag { display: none; }

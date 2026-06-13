@@ -65,7 +65,7 @@ const maxSurface = Math.max(...surfaces.map((s) => s.clusters), 1);
   </div>
   <ul class="bars">
     {byCat.map(([cat, c]) => (
-      <li class="bar">
+      <li class={c === maxCat ? 'bar bar--lead' : 'bar'}>
         <span class="bar__label">{label(cat)}</span>
         <span class="bar__track"><span class="bar__fill" style={`width:${pct(c, maxCat)}%`}></span></span>
         <span class="bar__val">{n(c)}</span>
@@ -80,8 +80,8 @@ const maxSurface = Math.max(...surfaces.map((s) => s.clusters), 1);
   </div>
   <ul class="bars">
     {byTier.map(([tier, c]) => (
-      <li class="bar">
-        <span class="bar__label">Tier {tier} · {TIER_NOTE[tier] ?? ''}</span>
+      <li class={c === maxTier ? 'bar bar--lead' : 'bar'}>
+        <span class="bar__label">Tier {tier} {TIER_NOTE[tier] ?? ''}</span>
         <span class="bar__track"><span class="bar__fill" style={`width:${pct(c, maxTier)}%`}></span></span>
         <span class="bar__val">{n(c)}</span>
       </li>
@@ -95,7 +95,7 @@ const maxSurface = Math.max(...surfaces.map((s) => s.clusters), 1);
   </div>
   <ul class="bars">
     {surfaces.map((s) => (
-      <li class="bar">
+      <li class={s.clusters === maxSurface ? 'bar bar--lead' : 'bar'}>
         <span class="bar__label" title={s.name}>{s.name}</span>
         <span class="bar__track"><span class="bar__fill" style={`width:${pct(s.clusters, maxSurface)}%`}></span></span>
         <span class="bar__val">{n(s.clusters)}</span>

@@ -37,7 +37,7 @@ const sections = CATEGORIES.map((cat) => ({
   .sort((a, b) => b.items.length - a.items.length);
 
 const sourceCount = stats?.sources?.verified ?? stats?.sources?.total ?? null;
-const leadLabel = `${picks.length} curated${sourceCount ? ` · ${sourceCount.toLocaleString('en-US')} sources` : ''}`;
+const leadLabel = `${picks.length} curated${sourceCount ? ` from ${sourceCount.toLocaleString('en-US')} sources` : ''}`;
 const fmt = (d: Date) =>
   d.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric', timeZone: 'UTC' });
 ---

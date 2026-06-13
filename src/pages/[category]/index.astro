@@ -16,7 +16,9 @@ const picks = (picksJson as unknown as PickData[]).map((p) => {
 });
 const list = picks.filter((p) => p.category === category.slug);
 const lead = list[0] ?? null;
-const restRows = lead ? list.slice(1) : list;
+// a size ladder, not a flat list: lead → a few briefs → a compact tail
+const briefRows = list.slice(1, 7);
+const alsoRows = list.slice(7);
 
 // subcategories that currently carry picks, with counts
 const subCounts = category.subcategories
@@ -43,10 +45,24 @@ const subCounts = category.subcategories
   </p>
 
   {list.length > 0 ? (
-    <div class="briefing" style="margin-top:1.4rem; border-top:1px solid var(--hairline-bold);">
-      {lead && <Pick pick={lead} index={0} variant="lead" />}
-      {restRows.map((p, i) => <Pick pick={p} index={i + 1} variant="brief" />)}
-    </div>
+    <Fragment>
+      <div class="briefing" style="margin-top:1.4rem; border-top:1px solid var(--hairline-bold);">
+        {lead && <Pick pick={lead} index={0} variant="lead" />}
+        {briefRows.map((p, i) => <Pick pick={p} index={i + 1} variant="brief" />)}
+      </div>
+      {alsoRows.length > 0 && (
+        <Fragment>
+          <div class="rail">
+            <span class="rail__label">More in {category.name}</span>
+            <span class="rail__rule"></span>
+            <span class="rail__count">{alsoRows.length}</span>
+          </div>
+          <div class="also">
+            {alsoRows.map((p, i) => <Pick pick={p} index={i} variant="also" />)}
+          </div>
+        </Fragment>
+      )}
+    </Fragment>
   ) : (
     <p class="empty-state">Nothing curated in {category.name} right now. The wire refills through the day.</p>
   )}

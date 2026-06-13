@@ -23,7 +23,8 @@ const list = picks.filter(
   (p) => p.category === category.slug && (p.subcategories ?? []).includes(sub.slug)
 );
 const lead = list[0] ?? null;
-const restRows = lead ? list.slice(1) : list;
+const briefRows = list.slice(1, 7);
+const alsoRows = list.slice(7);
 ---
 <Base title={`${sub.name} — ${category.name} — ${site.name}`} description={sub.blurb}>
   <p class="crumb" style="padding-top:2rem;"><a href={href(`/${category.slug}/`)}>← {category.name}</a></p>
@@ -37,10 +38,17 @@ const restRows = lead ? list.slice(1) : list;
   </p>
 
   {list.length > 0 ? (
-    <div class="briefing" style="margin-top:1.4rem; border-top:1px solid var(--hairline-bold);">
-      {lead && <Pick pick={lead} index={0} variant="lead" />}
-      {restRows.map((p, i) => <Pick pick={p} index={i + 1} variant="brief" />)}
-    </div>
+    <Fragment>
+      <div class="briefing" style="margin-top:1.4rem; border-top:1px solid var(--hairline-bold);">
+        {lead && <Pick pick={lead} index={0} variant="lead" />}
+        {briefRows.map((p, i) => <Pick pick={p} index={i + 1} variant="brief" />)}
+      </div>
+      {alsoRows.length > 0 && (
+        <div class="also" style="margin-top:1.2rem;">
+          {alsoRows.map((p, i) => <Pick pick={p} index={i} variant="also" />)}
+        </div>
+      )}
+    </Fragment>
   ) : (
     <p class="empty-state">Nothing under {sub.name} in {category.name} right now.</p>
   )}
