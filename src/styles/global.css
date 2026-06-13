@@ -787,11 +787,11 @@ html:not([data-showsignals="1"]) .pick__signals { display: none; }
 
 /* ── stats page ────────────────────────────────────────────────────────── */
 .stat-grid {
-  display: grid; grid-template-columns: repeat(auto-fit, minmax(11rem, 1fr));
-  gap: 1px; background: var(--hairline); border: 1px solid var(--hairline);
-  margin: var(--space-5) 0;
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(10rem, 1fr));
+  gap: var(--space-5) var(--space-6); margin: var(--space-6) 0; padding: var(--space-5) 0;
+  border-top: 1px solid var(--hairline-bold); border-bottom: 1px solid var(--hairline-bold);
 }
-.stat { background: var(--ground-2); padding: 1.1rem 1.2rem; }
+.stat { background: none; padding: 0; }
 .stat b {
   display: block; font-family: var(--sans); font-weight: 700;
   font-size: 2rem; letter-spacing: -0.02em; font-variant-numeric: tabular-nums;

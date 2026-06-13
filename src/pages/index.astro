@@ -113,10 +113,9 @@ const fmt = (d: Date) =>
         title: 'Subscribe',
         items: [
           { label: 'Everything', href: href('/rss.xml') },
-          { label: 'Digests', href: href('/digests/rss.xml') },
-          ...CATEGORIES.map((c) => ({ label: c.name, href: href(`/${c.slug}/rss.xml`) })),
+          { label: 'Digests only', href: href('/digests/rss.xml') },
         ],
-        moreLabel: 'All feeds',
+        moreLabel: 'Feeds by section',
         moreHref: href('/feeds/'),
       }}
     />
